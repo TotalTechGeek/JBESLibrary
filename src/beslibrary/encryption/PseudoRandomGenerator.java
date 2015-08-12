@@ -16,7 +16,7 @@ public class PseudoRandomGenerator {
 
     private BasylPseudoAdaptor basylPseudoAdaptor;
 
-    private Boolean stopRecycle;
+    private boolean stopRecycle = false;
     private int leftoff;
     
     private static int Unsigned(byte x)
@@ -299,6 +299,7 @@ public class PseudoRandomGenerator {
         for (int i = start; i < Generation.size(); i++)
         {
              Generation.set(i, Generation.get(i) + Generation.get(i-1));
+             //if(Generation.get(i) < 0) System.out.println("Oh");
              if (Generation.get(i) > 400000000) Generation.set(i, Generation.get(i) % 913131);
         }
     }
@@ -332,7 +333,7 @@ public class PseudoRandomGenerator {
         }
 
         byte r = (byte)(Generation.get(position) % 256);
-        Generation.set(position, Generation.get(position) + r);
+        Generation.set(position, Generation.get(position) + Unsigned(r));
 
         if (position != 0)
         {

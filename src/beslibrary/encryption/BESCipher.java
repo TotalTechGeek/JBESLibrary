@@ -44,6 +44,7 @@ public class BESCipher
              for (int i = 0; i <= 255; i++)
              {
                  pos = generator.GetRandomByte();
+
                  b = cipher[Unsigned(pos)];
                  cipher[Unsigned(pos)] = cipher[i];
                  cipher[i] = b;
@@ -63,6 +64,7 @@ public class BESCipher
          for (int i = 0; i <= 255; i++)
          {
              cipherB[Unsigned(cipher[i])] = (byte)i;
+            
          }
      }
 
@@ -76,7 +78,8 @@ public class BESCipher
      public void ShufflePosition(byte pos)
      {
     	 
-         byte pos2 = generator.GetRandomByte();
+         
+    	 byte pos2 = generator.GetRandomByte();
          if(pos == pos2)
          {
              RefreshOther();
@@ -99,7 +102,7 @@ public class BESCipher
      public byte EncryptRight(byte byt)
      {
          byte pos = byt;
-         byt = cipher[byt];
+         byt = cipher[Unsigned(byt)];
          ShufflePosition(pos);
          return byt;
      }
@@ -110,9 +113,8 @@ public class BESCipher
      /// <param name="byt"></param>
      public byte EncryptLeft(byte byt)
      {
-        
-         byt = cipherB[byt];
-
+    	 byte pos = byt;
+         byt = cipherB[Unsigned(byt)];
          ShufflePosition(byt);
          return byt;
      }
