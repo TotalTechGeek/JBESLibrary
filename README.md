@@ -5,7 +5,7 @@ You might want to compare this project against the [C# version](https://github.c
 
 Also, unlike other encryption schemes, BES is easy to modify and adapt for your purposes.
 
-The Basyl Encryption Standard uses a carefully designed PRNG resistant to cryptanalysis to encrypt your data with. This implementation allows you to use BES in the Java Programming Language.
+The Basyl Encryption Standard uses a [carefully designed PRNG](https://github.com/TheCreatorJames/BESLibrary/blob/master/PRNG.md) resistant to cryptanalysis to encrypt your data with. This implementation allows you to use BES in the Java Programming Language.
 
 
 ### Standard BES
