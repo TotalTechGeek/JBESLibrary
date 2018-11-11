@@ -1,22 +1,19 @@
 # Basyl Encryption Standard
-Ever need to protect your data? Encryption is the answer. The problem is, as computers get more powerful, encryption algorithms need to become stronger as well. Many other algorithms ([AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) or [Triple DES](https://en.wikipedia.org/wiki/Triple_DES)) that encrypt your data are based on [Feistel Networks](https://en.wikipedia.org/wiki/Feistel_cipher). Feistel networks require design for each possible key size, which makes it  impossible for them to adapt dynamically. The Basyl Encryption Standard is different. Designed to model the [Vernam Cipher](https://en.wikipedia.org/wiki/One-time_pad), also known as a [One-Time Pad](https://en.wikipedia.org/wiki/One-time_pad), the Basyl Encryption Standard absorbs as much information as you pass into it, and each encryption scheme is unique. There is no restricted key size at all!
+This is a simple stream cipher I designed in my senior year of High School (back in 2015). I would **highly discourage** someone from attempting the use it in production. 
 
-You might want to compare this project against the [C# version](https://github.com/TheCreatorJames/BESLibrary) or [C++ version](https://github.com/TheCreatorJames/BESLibraryCPP) of the library.
+It was designed to be memory intensive, making brute-force computation quite difficult to accomplish. 
 
-Also, unlike other encryption schemes, BES is easy to modify and adapt for your purposes.
+You might want to compare this project against the [C# version](https://github.com/TotalTechGeek/BESLibrary) or [C++ version](https://github.com/TotalTechGeek/BESLibraryCPP) of the library.
 
-The Basyl Encryption Standard uses a [carefully designed PRNG](https://github.com/TheCreatorJames/BESLibrary/blob/master/PRNG.md) resistant to cryptanalysis to encrypt your data with. This implementation allows you to use BES in the Java Programming Language.
-
+The Basyl Encryption Standard uses a [custom PRNG](https://github.com/TotalTechGeek/BESLibrary/blob/master/PRNG.md) designed to be resistant to cryptanalysis. 
 
 ### Standard BES
 
-The original Basyl Encryption standard uses a key generator to [XOR](https://en.wikipedia.org/wiki/Exclusive_or) against your file. The advantage of this version of the encryption scheme is that it allows random access to your files. Bruteforcing files using this encryption scheme requires petabytes (or zettabytes and beyond depending on the length of your password) of data to be computed each second to even crack it in a century. To ensure that two files are never encrypted the same way, a 32 byte hash of the file is used to seed the generator. An additional 8 bytes guarantee even the same hash is never encrypted twice.
+The original Basyl Encryption standard performs an [XOR operation](https://en.wikipedia.org/wiki/Exclusive_or) against its input. The advantage of this version of the encryption scheme is that it could allows random access to your file data. 
 
-This encryption scheme is slightly susceptible to a plaintext attack that allows them to replace some of the data in the file. However, because the hash of the original file is already included, this type of attack is easily prevented.
+The disadvantage of this scheme is that the encryption itself is malleable, but this is mitigated by the use of a hash as part of its  initialization vector. 
 
-
-
-One way to encrypt is to use the BasylOutputStream, which can be constructed from a BasylKeyGenerator.
+One method to encrypt is to use the BasylOutputStream, which can be constructed from a BasylKeyGenerator.
 ```Java
 BasylKeyGenerator bob = new BasylKeyGenerator("Password");
 BasylOutputStream bos = new BasylOutputStream(fileStream, bob, true);
@@ -42,12 +39,12 @@ To decrypt, using this key generator specifically, since it is XOR based, you co
 
 ```Java
 BasylKeyGenerator bob = new BasylKeyGenerator("Password", /* All the options factors */, hash, key1Random, key2Random, true);
-bob.DecryptByte(ref inputByte); //decrypts the byte.
+outputByte = bob.DecryptByte(inputByte); //decrypts the byte.
 ```
 
 
 ### Cipher BES
-To prevent any sort of tampering and remove any sort of derivable (indirect) XOR key, Cipher BES was created. This has an internal shuffle cipher, similar in concept to the [enigma machine](https://en.wikipedia.org/wiki/Enigma_machine). This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
+To prevent any sort of tampering (and intentionally increase error propagation), Cipher BES was created. This has an internal shuffle cipher, slightly similar in concept to the [enigma machine](https://en.wikipedia.org/wiki/Enigma_machine). This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
 
 You can encrypt in this mode using the BESCipher class.
 ```Java
